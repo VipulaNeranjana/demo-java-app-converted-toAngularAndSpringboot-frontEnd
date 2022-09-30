@@ -4,8 +4,8 @@
     <a class="navbar-brand">Student Management System</a>
     <a class="navbar-brand" (click)="onOpenModel(null,'addstudent')" style="cursor: pointer">Add Student</a>
     <form class="form-inline">
-      <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+      <input (ngModelChange)="searchStudent(search.value)" #search="ngModel" ngModel name="search" class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+      <!-- <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button> -->
     </form>
 </nav><br>
 
@@ -47,7 +47,7 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-            <form>
+            <form #addStudent="ngForm" (ngSubmit)="onAddStudent(addStudent)">
                 <div class="form-group">
                    <label for="name">Name</label>
                    <input type="text" ngModel name="name" class="form-control" id="name" placeholder="Name" required>
@@ -58,7 +58,7 @@
                 </div>
                 <div class="form-group">
                    <label for="phone">Phone Number</label>
-                   <input type="text" ngModel name="phone" class="form-control" id="phone" placeholder="Phone" required>
+                   <input type="text" ngModel name="phoneNumber" class="form-control" id="phone" placeholder="Phone" required>
                 </div>
                 <div class="form-group">
                    <label for="phone">Image URL</label>
@@ -68,19 +68,15 @@
                    <button type="button" id="add-student-form" class="btn btn-secondary" data-dismiss="modal">Close</button>
                    <button [disabled]="addForm.invalid" type="submit" class="btn btn-primary" >Save changes</button>
                 </div> -->
+                <div class="modal-footer">
+                  <button type="button" id="add-student-form" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                  <button [disabled]="addStudent.invalid" type="submit" class="btn btn-primary">Save changes</button>
+                </div>
             </form>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary">Save changes</button>
         </div>
       </div>
     </div>
 </div>
-
-<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#changeStudentModal">
-    Launch static backdrop modal
-  </button>
 
 <!-- change student model -->
 <div class="modal fade" id="changeStudentModal" tabindex="-1" aria-labelledby="changeStudentLabel" aria-hidden="true">
@@ -91,28 +87,32 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-            <form>
+            <form #changeStudent="ngForm" (ngSubmit)="onChangeStudent(changeStudent)">
                 <div class="form-group">
                    <label for="name">Name</label>
-                   <input type="text" ngModel name="name" class="form-control" id="name" placeholder="Name" required>
+                   <input type="text" ngModel="{{ updatableStudent?.name }}" name="name" class="form-control" id="name" placeholder="Name" required>
                 </div>
+
+                <input type="hidden" ngModel="{{ updatableStudent?.id }}" name="id" class="form-control" id="id" placeholder="id" required>
+                <input type="hidden" ngModel="{{ updatableStudent?.studentNumber }}" name="studentNumber" class="form-control" id="studentNumber" placeholder="studentNumber" required>
+                
                 <div class="form-group">
                    <label for="email">Email Address</label>
-                   <input type="email" ngModel name="email" class="form-control" id="email" placeholder="Email" required>
+                   <input type="email" ngModel="{{ updatableStudent?.email }}" name="email" class="form-control" id="email" placeholder="Email" required>
                 </div>
                 <div class="form-group">
                    <label for="phone">Phone Number</label>
-                   <input type="text" ngModel name="phone" class="form-control" id="phone" placeholder="Phone" required>
+                   <input type="text" ngModel="{{ updatableStudent?.phoneNumber }}" name="phoneNumber" class="form-control" id="phone" placeholder="Phone" required>
                 </div>
                 <div class="form-group">
                    <label for="phone">Image URL</label>
-                   <input type="text" ngModel name="imageURL" class="form-control" id="imageUrl" placeholder="Image URL" required>
+                   <input type="text" ngModel="{{ updatableStudent?.imageURL }}" name="imageURL" class="form-control" id="imageUrl" placeholder="Image URL" required>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" id="change-student-form" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                  <button type="submit" class="btn btn-primary">Save changes</button>
                 </div>
             </form>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary">Save changes</button>
         </div>
       </div>
     </div>
@@ -127,11 +127,11 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          Deleted
+          Do you want to delete {{ deletableStudent?.name }}
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary">Save changes</button>
+          <button type="button" id="delete-student-form" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button (click)="onDeleteStudent(deletableStudent?.id)" class="btn btn-danger">Delete</button>
         </div>
       </div>
     </div>
